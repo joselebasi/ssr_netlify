@@ -1,23 +1,15 @@
 import type { APIRoute } from 'astro';
-import { getOrganizationRepos } from './repositories';
+import { createRepository } from './service_create';
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
-    const { organization } = body;
-    console.log(body);
 
-    if (!organization) {
-      return new Response(
-        JSON.stringify({ error: 'Organization name is required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const repositories = await getOrganizationRepos(organization);
+    console.log("Fetching data from GitHub Action");
+    const response = await createRepository(body);
 
     return new Response(
-      JSON.stringify({ repositories }),
+      JSON.stringify({ message: 'Already execute workflow!!!' }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error: any) {
