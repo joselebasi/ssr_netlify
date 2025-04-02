@@ -40,7 +40,7 @@ export async function getOrganizationRepos(orgName: string): Promise<Repository[
     if (error.status === 404) {
       throw new Error(`Organization "${orgName}" not found`);
     }
-    
+    console.log(error);
     throw new Error('Failed to fetch repositories');
   }
 }
