@@ -15,7 +15,7 @@
   </div>
   <button
     type="submit"
-    class="bg-gray-600 text-white py-2 px-6 rounded-md hover:bg-gray-800 transition-colors"
+    class="bg-gray-700 text-white py-2 px-6 rounded-md hover:bg-gray-600 transition-colors"
   >
     Fetch Repositories
   </button>
@@ -30,24 +30,31 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("astro:page-load", () => {
+
     const form = document.getElementById('orgForm') as HTMLFormElement;
     const resultsDiv = document.getElementById('results') as HTMLDivElement;
     const loadingDiv = document.getElementById('loading') as HTMLDivElement;
     const reposContainer = document.getElementById('repos-container') as HTMLDivElement;
 
-    form.addEventListener('submit', async (e) => {
+    if (!form) return; // Evita errores si el formulario no está presente
+
+    // Asegúrate de no duplicar eventos
+    form.removeEventListener('submit', handleFormSubmit);
+    form.addEventListener('submit', handleFormSubmit);
+
+    async function handleFormSubmit(e: Event) {
       e.preventDefault();
-      
+
       const organization = (document.getElementById('organization') as HTMLInputElement).value.trim();
-      
+
       if (!organization) return;
 
-      // Show loading state
+      // Mostrar estado de carga
       resultsDiv.classList.remove('hidden');
       loadingDiv.classList.remove('hidden');
       reposContainer.innerHTML = '';
-      
+
       try {
         const response = await fetch('/api/services_repos', {
           method: 'POST',
@@ -58,24 +65,24 @@
         });
 
         const data = await response.json();
-        
-        // Hide loading
+
+        // Ocultar estado de carga
         loadingDiv.classList.add('hidden');
-        
+
         if (data.error) {
           reposContainer.innerHTML = `<p class="text-red-600">${data.error}</p>`;
           return;
         }
-        
+
         if (data.repositories.length === 0) {
           reposContainer.innerHTML = '<p>No repositories found for this organization.</p>';
           return;
         }
-        
-        // Display repositories
+
+        // Mostrar repositorios
         const reposList = document.createElement('ul');
         reposList.className = 'space-y-4';
-        
+
         data.repositories.forEach((repo: any) => {
           const item = document.createElement('li');
           item.className = 'border-b pb-4';
@@ -92,14 +99,17 @@
           `;
           reposList.appendChild(item);
         });
-        
+
         reposContainer.appendChild(reposList);
-        
+
       } catch (error) {
         loadingDiv.classList.add('hidden');
         reposContainer.innerHTML = '<p class="text-red-600">An error occurred while fetching repositories.</p>';
         console.error('Error:', error);
       }
-    });
+    }
+
   });
+    
+  
 </script>

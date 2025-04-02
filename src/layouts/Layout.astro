@@ -2,6 +2,7 @@
 // Import the CSS from the `src/styles` directory
 import '../styles/global.css';
 import Aside from '@components/Aside.astro';
+import Aside2 from '@components/Aside2.astro';
 import ClientRouter from 'astro/components/ClientRouter.astro';
 
 interface Props {
@@ -16,18 +17,18 @@ const { title } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="description" content="Utils for oxxogh" />
 		<meta name="viewport" content="width=device-width" />
-		<link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
 		<ClientRouter />		
 		<title>{title}</title>
 	</head>
 	<body class="h-screen ">
 		<div class="flex min-h-screen">
 			<aside class="w-1/5">
-			<Aside />
+			<Aside transition:persist/>
 			</aside> 
 			<main class="w-4/5 p-3">
 				<slot />
 			</main>
 		</div>
+		
 	</body>
 </html>
