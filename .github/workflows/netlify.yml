@@ -9,7 +9,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ( Build to ./dist or other directory... )
+      # Install pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      # Install dependencies and build the project
+      - name: Install dependencies and build
+        run: |
+          pnpm install
+          pnpm build
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3.0
